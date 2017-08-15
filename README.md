@@ -50,3 +50,28 @@ $ ./simpleMqttClient.py --host 192.168.10.1 -t "/hidenorly/#"
 ```
 $ ./simpleMqttClient.py --host 192.168.10.1 -t "/hidenorly/yahho" -v "hoge" -c "hoge"
 ```
+
+
+## Explanation of my classes
+
+```
+class MySubscriber(MQTTSubscriber):
+	def onMessage(self, msg):
+		print("MySubscriber:" + msg.topic + " " + str(msg.payload))
+
+if __name__ == '__main__':
+..snip..
+	mqtt = MQTTManager(options.clientId, options.host, options.port, options.username, options.password, False)
+
+	mqtt.connect()
+
+	if options.publishVal:
+		mqtt.publish(options.topic, options.publishVal)
+	else:
+		aSubscriber = MySubscriber(options.topic)
+		mqtt.addSubscriber( aSubscriber.topic, aSubscriber )
+		mqtt.enableSubscriber( aSubscriber.topic, True )
+		mqtt.loop()
+
+	mqtt.disconnect()
+```
